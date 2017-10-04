@@ -3,7 +3,7 @@ from dynet import *
 import dynet
 from utils import read_conll, write_conll
 from operator import itemgetter
-import utils, time, random, decoder
+import utils, time, random, Edmonds_decoder, decoder
 import numpy as np
 from mnnl import FFSequencePredictor, Layer, RNNSequencePredictor, BiRNNSequencePredictor
 
@@ -16,6 +16,9 @@ class jPosDepLearner:
         #self.trainer = SimpleSGDTrainer(self.model)
         self.activations = {'tanh': tanh, 'sigmoid': logistic, 'relu': rectify, 'tanh3': (lambda x: tanh(cwise_multiply(cwise_multiply(x, x), x)))}
         self.activation = self.activations[options.activation]
+
+        self.decoders = {'Eisner': decoder, 'Edmonds': Edmonds_decoder}
+        self.decoder = self.decoders[options.decoder]
 
         self.blstmFlag = options.blstmFlag
         self.labelsFlag = options.labelsFlag
@@ -191,7 +194,7 @@ class jPosDepLearner:
                             rentry.lstms[0] = blstm_backward.output()
 
                 scores, exprs = self.__evaluate(conll_sentence, True)
-                heads = decoder.parse_proj(scores)
+                heads = self.decoder.parse_proj(scores)
                 
                 #Multiple roots: heading to the previous "rooted" one
                 rootCount = 0
@@ -308,7 +311,7 @@ class jPosDepLearner:
 
                 scores, exprs = self.__evaluate(conll_sentence, True)
                 gold = [entry.parent_id for entry in conll_sentence]
-                heads = decoder.parse_proj(scores, gold if self.costaugFlag else None)
+                heads = self.decoder.parse_proj(scores, gold if self.costaugFlag else None)
 
                 if self.labelsFlag:
                     for modifier, head in enumerate(gold[1:]):

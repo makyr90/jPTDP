@@ -20,6 +20,7 @@ if __name__ == '__main__':
     parser.add_option("--lr", type="float", dest="learning_rate", default=0.1)
     parser.add_option("--outdir", type="string", dest="output", default="results")
     parser.add_option("--activation", type="string", dest="activation", default="tanh")
+    parser.add_option("--decoder", type="string", dest="decoder", default="Eisner")
     parser.add_option("--lstmlayers", type="int", dest="lstm_layers", default=2)
     parser.add_option("--lstmdims", type="int", dest="lstm_dims", default=128)
     parser.add_option("--disableblstm", action="store_false", dest="blstmFlag", default=True)
