@@ -26,20 +26,20 @@ def parse_proj(scores_matrix, gold=None):
 			del Arcs_copy[k]
 		if (k[0]== k[1] and k[0]!=0):
 			del Arcs_copy[k]
-	
-		
+			
 	newArcs =  Chu_Liu_Edmonds(Arcs_copy)
 	
 	#Get the initial weights of selected arcs
 	for k,v in newArcs.items():
 		newArcs[k] = Arcs[k]
-
 	
 	heads = [-1 for _ in range(nr)]
 	for k,v in newArcs.items():
 		heads[k[1]] = k[0]
 	
 	return heads
+
+
 
 def Chu_Liu_Edmonds(Arcs):
 
@@ -97,9 +97,9 @@ def Chu_Liu_Edmonds(Arcs):
 	
 
 def contract(Arcs,cycle,Cycle_arcs):
+	
 	#Contract cycle & recompute arcs from/to the cycle
 	wc =hash(tuple(cycle))
-
 	contracted_Arcs = {}
 	ep = {}
 	for k,v in Arcs.items():
@@ -175,16 +175,15 @@ def contract(Arcs,cycle,Cycle_arcs):
 	for key in insert_keys:
 		contracted_Arcs[(key[0],key[1])] = key[2]	
 
-	
-	
+		
 	return contracted_Arcs,wc,ep,predecessor
 
 
 
 
 def highest_incoming_arcs(Arcs):
-	#For each vertex(except root) find the incoming arc with highest value
 	
+	#For each vertex(except root) find the incoming arc with highest value
 	greedy_arcs = {}
 	graph = SCC.arcs_to_graph(Arcs)
 	rev_graph = SCC.transpose_graph(graph)
@@ -202,7 +201,3 @@ def highest_incoming_arcs(Arcs):
 			greedy_arcs[(argmax,k)] = Arcs[(argmax,k)]					
 	
 	return greedy_arcs
-
-# test_array = np.array([[-1,15,0,9],[9,-1,20,3],[-1,30,-1,30],[-1,11,0,-1]])
-# test = parse_proj(test_array,[-1,2,0,2])
-# print test
