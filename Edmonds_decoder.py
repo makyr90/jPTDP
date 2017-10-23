@@ -15,7 +15,7 @@ def parse_proj(scores_matrix, gold=None):
 	Arcs = {}
 	for idx in range(scores_matrix.shape[0]):
 		for jdx in range(scores_matrix.shape[1]):
-			# ADD 	+1.0 to all edges that are not in gold tree, to enable learning via loss function
+			# ADD 	+1.0 to all edges that are not in gold tree, to enable learning via loss function(hinge loss)
 			Arcs[(idx,jdx)] = scores_matrix[idx,jdx] + (0.0 if gold is not None and gold[jdx]==idx else 1.0)
 	
 	#Delete self-edges and edges that points to root		
